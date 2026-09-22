@@ -1,0 +1,222 @@
+{
+  "info": {
+    "name": "Microservicio Atenciones Medicas — Semana 06",
+    "description": "Pruebas CRUD de pacientes, consultas, atenciones e historial medico contra Oracle.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET listar pacientes",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/pacientes"
+      }
+    },
+    {
+      "name": "GET paciente por id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/pacientes/1"
+      }
+    },
+    {
+      "name": "GET historial de un paciente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/pacientes/1/historial"
+      }
+    },
+    {
+      "name": "GET paciente por RUT",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/pacientes/rut/11.111.111-1"
+      }
+    },
+    {
+      "name": "POST crear paciente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 100,\n  \"rut\": \"19.999.999-9\",\n  \"nombre\": \"Valentina\",\n  \"apellido\": \"Morales\",\n  \"fechaNacimiento\": \"1992-08-15\",\n  \"telefono\": \"+56919999999\",\n  \"email\": \"valentina.morales@correo.cl\"\n}"
+        },
+        "url": "{{baseUrl}}/pacientes"
+      }
+    },
+    {
+      "name": "PUT modificar paciente",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rut\": \"19.999.999-9\",\n  \"nombre\": \"Valentina\",\n  \"apellido\": \"Morales\",\n  \"fechaNacimiento\": \"1992-08-15\",\n  \"telefono\": \"+56919999999\",\n  \"email\": \"valentina.morales@nuevo.cl\"\n}"
+        },
+        "url": "{{baseUrl}}/pacientes/100"
+      }
+    },
+    {
+      "name": "DELETE eliminar paciente",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/pacientes/100"
+      }
+    },
+    {
+      "name": "GET listar consultas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/consultas"
+      }
+    },
+    {
+      "name": "GET consultas por paciente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/consultas?pacienteId=1"
+      }
+    },
+    {
+      "name": "POST crear consulta",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 100,\n  \"pacienteId\": 8,\n  \"fecha\": \"2026-08-01\",\n  \"motivo\": \"Control pediatrico\",\n  \"medico\": \"Dra. Paula Rios\",\n  \"estado\": \"agendada\"\n}"
+        },
+        "url": "{{baseUrl}}/consultas"
+      }
+    },
+    {
+      "name": "PUT modificar consulta",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pacienteId\": 8,\n  \"fecha\": \"2026-08-01\",\n  \"motivo\": \"Control pediatrico actualizado\",\n  \"medico\": \"Dra. Paula Rios\",\n  \"estado\": \"realizada\"\n}"
+        },
+        "url": "{{baseUrl}}/consultas/100"
+      }
+    },
+    {
+      "name": "DELETE eliminar consulta",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/consultas/100"
+      }
+    },
+    {
+      "name": "GET listar atenciones",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/atenciones"
+      }
+    },
+    {
+      "name": "GET atenciones por paciente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/atenciones?pacienteId=2"
+      }
+    },
+    {
+      "name": "POST crear atencion",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": 100,\n  \"pacienteId\": 1,\n  \"consultaId\": 1,\n  \"fecha\": \"2026-01-10\",\n  \"diagnostico\": \"Control de seguimiento\",\n  \"tratamiento\": \"Mantener indicaciones previas\",\n  \"medico\": \"Dra. Paula Rios\"\n}"
+        },
+        "url": "{{baseUrl}}/atenciones"
+      }
+    },
+    {
+      "name": "PUT modificar atencion",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pacienteId\": 1,\n  \"consultaId\": 1,\n  \"fecha\": \"2026-01-10\",\n  \"diagnostico\": \"Control de seguimiento actualizado\",\n  \"tratamiento\": \"Nueva indicacion medica\",\n  \"medico\": \"Dra. Paula Rios\"\n}"
+        },
+        "url": "{{baseUrl}}/atenciones/100"
+      }
+    },
+    {
+      "name": "DELETE eliminar atencion",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/atenciones/100"
+      }
+    },
+    {
+      "name": "POST paciente con RUT invalido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rut\": \"invalido\",\n  \"nombre\": \"Valentina\",\n  \"apellido\": \"Morales\",\n  \"fechaNacimiento\": \"1992-08-15\",\n  \"telefono\": \"+56919999999\",\n  \"email\": \"valentina.morales@correo.cl\"\n}"
+        },
+        "url": "{{baseUrl}}/pacientes"
+      }
+    }
+  ]
+}
