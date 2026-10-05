@@ -1,5 +1,11 @@
 HELP.md
-target/
+wallet/
+target/*
+!target/atencionesmedicas.jar
+!target/classes/
+target/classes/*
+!target/classes/walletcloud/
+!target/classes/walletcloud/**
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

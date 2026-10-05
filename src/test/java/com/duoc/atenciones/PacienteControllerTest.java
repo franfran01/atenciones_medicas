@@ -63,14 +63,15 @@ class PacienteControllerTest {
     void listarPacientesDevuelveJsonConAlMenosOchoRegistros() throws Exception {
         mockMvc.perform(get("/pacientes"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(greaterThanOrEqualTo(8)))
-                .andExpect(jsonPath("$[0].id").exists())
-                .andExpect(jsonPath("$[0].rut").exists())
-                .andExpect(jsonPath("$[0].nombre").exists())
-                .andExpect(jsonPath("$[0].apellido").exists())
-                .andExpect(jsonPath("$[0].fechaNacimiento").exists())
-                .andExpect(jsonPath("$[0].telefono").exists())
-                .andExpect(jsonPath("$[0].email").exists());
+                .andExpect(jsonPath("$._embedded.pacientes.length()").value(greaterThanOrEqualTo(8)))
+                .andExpect(jsonPath("$._embedded.pacientes[0].id").exists())
+                .andExpect(jsonPath("$._embedded.pacientes[0].rut").exists())
+                .andExpect(jsonPath("$._embedded.pacientes[0].nombre").exists())
+                .andExpect(jsonPath("$._embedded.pacientes[0].apellido").exists())
+                .andExpect(jsonPath("$._embedded.pacientes[0].fechaNacimiento").exists())
+                .andExpect(jsonPath("$._embedded.pacientes[0].telefono").exists())
+                .andExpect(jsonPath("$._embedded.pacientes[0].email").exists())
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
@@ -79,7 +80,8 @@ class PacienteControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Maria"))
-                .andExpect(jsonPath("$.rut").value("11.111.111-1"));
+                .andExpect(jsonPath("$.rut").value("11.111.111-1"))
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
@@ -94,7 +96,11 @@ class PacienteControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.paciente.id").value(1))
                 .andExpect(jsonPath("$.consultas.length()").value(greaterThanOrEqualTo(2)))
-                .andExpect(jsonPath("$.atenciones.length()").value(greaterThanOrEqualTo(2)));
+                .andExpect(jsonPath("$.atenciones.length()").value(greaterThanOrEqualTo(2)))
+                .andExpect(jsonPath("$._links.self.href").exists())
+                .andExpect(jsonPath("$._links.paciente.href").exists())
+                .andExpect(jsonPath("$._links.consultas.href").exists())
+                .andExpect(jsonPath("$._links.atenciones.href").exists());
     }
 
     @Test
@@ -107,7 +113,8 @@ class PacienteControllerTest {
     void buscarPacientePorRutDevuelveElDetalle() throws Exception {
         mockMvc.perform(get("/pacientes/rut/11.111.111-1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nombre").value("Maria"));
+                .andExpect(jsonPath("$.nombre").value("Maria"))
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
@@ -131,7 +138,8 @@ class PacienteControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(100))
                 .andExpect(jsonPath("$.nombre").value("Valentina"))
-                .andExpect(jsonPath("$.rut").value("19.999.999-9"));
+                .andExpect(jsonPath("$.rut").value("19.999.999-9"))
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
@@ -179,7 +187,8 @@ class PacienteControllerTest {
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("nicolas.paredes@nuevo.cl"));
+                .andExpect(jsonPath("$.email").value("nicolas.paredes@nuevo.cl"))
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
@@ -201,17 +210,19 @@ class PacienteControllerTest {
     void listarConsultasDevuelveAlMenosOchoRegistros() throws Exception {
         mockMvc.perform(get("/consultas"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(greaterThanOrEqualTo(8)))
-                .andExpect(jsonPath("$[0].motivo").exists())
-                .andExpect(jsonPath("$[0].estado").exists());
+                .andExpect(jsonPath("$._embedded.consultas.length()").value(greaterThanOrEqualTo(8)))
+                .andExpect(jsonPath("$._embedded.consultas[0].motivo").exists())
+                .andExpect(jsonPath("$._embedded.consultas[0].estado").exists())
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
     void filtrarConsultasPorPacienteDevuelveLasDelPaciente() throws Exception {
         mockMvc.perform(get("/consultas").param("pacienteId", "1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(greaterThanOrEqualTo(2)))
-                .andExpect(jsonPath("$[0].pacienteId").value(1));
+                .andExpect(jsonPath("$._embedded.consultas.length()").value(greaterThanOrEqualTo(2)))
+                .andExpect(jsonPath("$._embedded.consultas[0].pacienteId").value(1))
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
@@ -238,7 +249,8 @@ class PacienteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(CONSULTA_NUEVA_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.motivo").value("Control pediatrico"));
+                .andExpect(jsonPath("$.motivo").value("Control pediatrico"))
+                .andExpect(jsonPath("$._links.self.href").exists());
 
         mockMvc.perform(delete("/consultas/100"))
                 .andExpect(status().isNoContent());
@@ -254,16 +266,18 @@ class PacienteControllerTest {
     void listarAtencionesDevuelveAlMenosOchoRegistros() throws Exception {
         mockMvc.perform(get("/atenciones"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(greaterThanOrEqualTo(8)))
-                .andExpect(jsonPath("$[0].diagnostico").exists())
-                .andExpect(jsonPath("$[0].tratamiento").exists());
+                .andExpect(jsonPath("$._embedded.atenciones.length()").value(greaterThanOrEqualTo(8)))
+                .andExpect(jsonPath("$._embedded.atenciones[0].diagnostico").exists())
+                .andExpect(jsonPath("$._embedded.atenciones[0].tratamiento").exists())
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
     void filtrarAtencionesPorPacienteDevuelveLasDelPaciente() throws Exception {
         mockMvc.perform(get("/atenciones").param("pacienteId", "2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].pacienteId").value(2));
+                .andExpect(jsonPath("$._embedded.atenciones[0].pacienteId").value(2))
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test
@@ -284,7 +298,8 @@ class PacienteControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(ATENCION_NUEVA_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.diagnostico").value("Control de seguimiento"));
+                .andExpect(jsonPath("$.diagnostico").value("Control de seguimiento"))
+                .andExpect(jsonPath("$._links.self.href").exists());
 
         mockMvc.perform(delete("/atenciones/100"))
                 .andExpect(status().isNoContent());

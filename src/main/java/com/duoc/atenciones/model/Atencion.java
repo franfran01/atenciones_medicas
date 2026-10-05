@@ -12,12 +12,14 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.server.core.Relation;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "ATENCIONES")
+@Relation(itemRelation = "atencion", collectionRelation = "atenciones")
 public class Atencion {
 
     @Id

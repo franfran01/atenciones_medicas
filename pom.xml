@@ -30,8 +30,17 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
 			<artifactId>ojdbc17</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>oraclepki</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -57,6 +66,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>atencionesmedicas</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
