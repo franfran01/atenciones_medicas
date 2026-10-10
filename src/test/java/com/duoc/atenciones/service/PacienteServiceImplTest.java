@@ -1,6 +1,9 @@
 package com.duoc.atenciones.service;
 
 import com.duoc.atenciones.exception.ConflictoException;
+import com.duoc.atenciones.model.Atencion;
+import com.duoc.atenciones.model.Consulta;
+import com.duoc.atenciones.model.HistorialMedico;
 import com.duoc.atenciones.model.Paciente;
 import com.duoc.atenciones.repository.AtencionRepository;
 import com.duoc.atenciones.repository.ConsultaRepository;
@@ -13,6 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -76,5 +82,35 @@ class PacienteServiceImplTest {
 
         assertThrows(ConflictoException.class, () -> pacienteService.crearPaciente(paciente));
         verify(pacienteRepository, never()).save(paciente);
+    }
+
+    @Test
+    @DisplayName("El historial reune al paciente con sus consultas y atenciones")
+    void obtenerHistorialReuneConsultasYAtenciones() {
+        Consulta consulta = new Consulta(
+                1, 100, "2026-08-01", "Control pediatrico", "Dra. Paula Rios", "agendada");
+        Atencion atencion = new Atencion(
+                1, 100, 1, "2026-08-01", "Control de seguimiento", "Reposo", "Dra. Paula Rios");
+        when(pacienteRepository.findById(100)).thenReturn(Optional.of(paciente));
+        when(consultaRepository.findByPacienteId(100)).thenReturn(List.of(consulta));
+        when(atencionRepository.findByPacienteId(100)).thenReturn(List.of(atencion));
+
+        HistorialMedico historial = pacienteService.obtenerHistorial(100);
+
+        assertEquals("Valentina", historial.getPaciente().getNombre());
+        assertEquals(1, historial.getConsultas().size());
+        assertEquals("Control pediatrico", historial.getConsultas().get(0).getMotivo());
+        assertEquals(1, historial.getAtenciones().size());
+        assertEquals("Control de seguimiento", historial.getAtenciones().get(0).getDiagnostico());
+    }
+
+    @Test
+    @DisplayName("No elimina un paciente que tiene consultas asociadas")
+    void eliminarPacienteConConsultasLanzaConflicto() {
+        when(pacienteRepository.findById(100)).thenReturn(Optional.of(paciente));
+        when(consultaRepository.existsByPacienteId(100)).thenReturn(true);
+
+        assertThrows(ConflictoException.class, () -> pacienteService.eliminarPaciente(100));
+        verify(pacienteRepository, never()).deleteById(100);
     }
 }
